@@ -1,5 +1,5 @@
 from django.db import models
-import re
+import re, bcrypt
 
 class UserManager(models.Manager):
     def loginValidator(self, form):
@@ -9,20 +9,25 @@ class UserManager(models.Manager):
 
         errors = {}
 
+        if not password:
+            errors['login_password'] = "Password cannot be blank."
+
         if not email:
-            errors['email'] = "Email cannot be blank."
+            errors['login_email'] = "Email cannot be blank."
         elif not User.objects.filter(email=email):
-            errors['email'] = "Email not found. Please register."
+            errors['login_email'] = "Email not found. Please register."
         else:
             # compare password to one in database
             user = User.objects.filter(email=email)[0]
-            if user.password != password:
-                errors['password'] = "Incorrect password."
+            # if user.password != password:
+            #     errors['login_password'] = "Incorrect password."
 
-        if not password:
-            errors['password'] = "Password cannot be blank."
+            if not bcrypt.checkpw(form['password'].encode(), user.password.encode()):
+                    errors['login_password'] = "Incorrect password."
 
-        return errors
+            return errors, user
+
+        return errors, False
 
     def regValidator(self, form):
 
@@ -36,26 +41,26 @@ class UserManager(models.Manager):
         errors = {}
 
         if not fname:
-            errors['fname'] = "First name cannot be blank."
+            errors['reg_fname'] = "First name cannot be blank."
         elif len(fname) < 2:
-            errors['fname'] = "First name must be at least 2 characters."
+            errors['reg_fname'] = "First name must be at least 2 characters."
 
         if not lname:
-            errors['lname'] = "Last name cannot be blank."
+            errors['reg_lname'] = "Last name cannot be blank."
         elif len(lname) < 2:
-            errors['lname'] = "Last name must be at least 2 characters."
+            errors['reg_lname'] = "Last name must be at least 2 characters."
 
         if not email:
-            errors['email'] = "Email cannot be blank."
+            errors['reg_email'] = "Email cannot be blank."
         elif User.objects.filter(email=email):
-            errors['email'] = "Email already exists. Please login."
+            errors['reg_email'] = "Email already exists. Please login."
 
         if not password:
-            errors['password'] = "Password cannot be blank."
-        elif not PASSWORD_REGEX.match(password):
-            errors['password'] = "Password must be at least 4 characters, no more than 8 characters, and must include at least one upper case letter, one lower case letter, and one numeric digit."
+            errors['reg_password'] = "Password cannot be blank."
+        # elif not PASSWORD_REGEX.match(password):
+        #     errors['reg_password'] = "Password must be at least 4 characters, no more than 8 characters, and must include at least one upper case letter, one lower case letter, and one numeric digit."
         elif password != confirm_pw:
-            errors['password'] = "Passwords must match."
+            errors['reg_confirm_pw'] = "Passwords must match."
 
         return errors
 

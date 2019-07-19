@@ -19,23 +19,58 @@
                       {% csrf_token %}
                       <div class="form-group">
                         <label for="first_name">First Name</label>
+                        {% if messages %}
+                                {% for message in messages %}
+                                    {% if 'reg_fname' in message.tags %}
+                                        <p{% if message.tags %} class="{{ message.tags }} error"{% endif %}>{{ message }}</p>
+                                    {% endif %}
+                                {% endfor %}
+                        {% endif %}
                         <input type="text" class="form-control" id="first_name" name="first_name" placeholder="First Name">
                       </div>
                       <div class="form-group">
                         <label for="last_name">Last Name</label>
+                        {% if messages %}
+                                {% for message in messages %}
+                                    {% if 'reg_lname' in message.tags %}
+                                        <p{% if message.tags %} class="{{ message.tags }} error"{% endif %}>{{ message }}</p>
+                                    {% endif %}
+                                {% endfor %}
+                        {% endif %}
                         <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Last Name">
                       </div>
                       <div class="form-group">
                         <label for="exampleInputEmail1">Email address</label>
+                        {% if messages %}
+                                {% for message in messages %}
+                                    {% if 'reg_email' in message.tags %}
+                                        <p{% if message.tags %} class="{{ message.tags }} error"{% endif %}>{{ message }}</p>
+                                    {% endif %}
+                                {% endfor %}
+                        {% endif %}
                         <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="email" placeholder="Enter email">
                         <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
                       </div>
                       <div class="form-group">
                         <label for="exampleInputPassword1">Password</label>
+                        {% if messages %}
+                                {% for message in messages %}
+                                    {% if 'reg_password' in message.tags %}
+                                        <p{% if message.tags %} class="{{ message.tags }} error"{% endif %}>{{ message }}</p>
+                                    {% endif %}
+                                {% endfor %}
+                        {% endif %}
                         <input type="password" class="form-control" id="exampleInputPassword1" name="password" placeholder="Password">
                       </div>
                       <div class="form-group">
                         <label for="exampleInputPassword1">Confirm Password</label>
+                        {% if messages %}
+                                {% for message in messages %}
+                                    {% if 'reg_confirm_pw' in message.tags %}
+                                        <p{% if message.tags %} class="{{ message.tags }} error"{% endif %}>{{ message }}</p>
+                                    {% endif %}
+                                {% endfor %}
+                        {% endif %}
                         <input type="password" class="form-control" id="exampleInputPassword1" name="confirm_pw" placeholder="Confirm Password">
                       </div>
                       <!-- <div class="form-check">
@@ -53,11 +88,25 @@
                       {% csrf_token %}
                       <div class="form-group">
                         <label for="exampleInputEmail1">Email address</label>
+                        {% if messages %}
+                                {% for message in messages %}
+                                    {% if "login_email" in message.tags %}
+                                        <p{% if message.tags %} class="{{ message.tags }} error"{% endif %}>{{ message }}</p>
+                                    {% endif %}
+                                {% endfor %}
+                        {% endif %}
                         <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="email" placeholder="Enter email">
                         <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
                       </div>
                       <div class="form-group">
                         <label for="exampleInputPassword1">Password</label>
+                        {% if messages %}
+                                {% for message in messages %}
+                                    {% if "login_password" in message.tags %}
+                                        <p{% if message.tags %} class="{{ message.tags }} error"{% endif %}>{{ message }}</p>
+                                    {% endif %}
+                                {% endfor %}
+                        {% endif %}
                         <input type="password" class="form-control" id="exampleInputPassword1" name="password" placeholder="Password">
                       </div>
                       <!-- <div class="form-check">
@@ -66,11 +115,6 @@
                       </div> -->
                       <button type="submit" class="btn btn-primary">Login</button>
                     </form><br>
-                    {% if messages %}
-                            {% for message in messages %}
-                                <p{% if message.tags %} class="{{ message.tags }} error"{% endif %}>{{ message }}</p>
-                            {% endfor %}
-                    {% endif %}
 
                 </div>
             </div>

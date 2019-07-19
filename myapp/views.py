@@ -11,14 +11,26 @@ def index(request):
     return render(request, 'index.html', context)
 
 def login(request):
-    errors = User.objects.loginValidator(request.POST)
+    # print("request.scheme",request.scheme)
+    # print("request.body",request.body)
+    # print("request.path", request.path)
+    # print("request.COOKIES", request.COOKIES)
+    # print("request.POST", request.POST)
+    # print("request.session", request.session)
+    # for key, value in request.session.items():
+    #     print(f"'{key}': {value}")
+    #
+    # print("request.get_host()", request.get_host())
+    result = User.objects.loginValidator(request.POST)
 
-    if errors:
-        for key, value in errors.items():
-            messages.add_message(request, messages.INFO, value)
+    if result[0]:
+        for key, value in result[0].items():
+            messages.add_message(request, messages.INFO, value, extra_tags=key)
         return redirect("/")
     else:
-        return redirect("/dashboard")
+        request.session['id'] = result[1].id
+        response = redirect("/dashboard")
+        return response
 
     return redirect("/")
 
@@ -27,7 +39,11 @@ def dashboard(request):
         return redirect("/")
     else:
         user = User.objects.get(id=request.session['id'])
-        return render(request, "dashboard.html", {'user':user})
+        response = render(request, "dashboard.html", {'user':user})
+        print(response)
+        # for key, value in response.items():
+        #     print(key, value)
+        return response
 
 def register(request):
     errors = User.objects.regValidator(request.POST)
@@ -35,7 +51,7 @@ def register(request):
     if errors:
         # loop through errors and pass into messages to display on screen
         for key, value in errors.items():
-            messages.add_message(request, messages.INFO, value)
+            messages.add_message(request, messages.INFO, value, extra_tags=key)
         return redirect("/")
     else:
         hash = bcrypt.hashpw(request.POST['password'].encode(), bcrypt.gensalt())
